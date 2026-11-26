@@ -26,12 +26,14 @@ class CompletionRequest(BaseModel):
 
 
 def download_cloudflared() -> Path:
-    binary = Path("cloudflared")
-    if binary.exists():
+    binary = Path("cloudflared").resolve()
+    if binary.exists() and binary.stat().st_size > 1_000_000:
         return binary
     url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
     urllib.request.urlretrieve(url, binary)
     binary.chmod(0o755)
+    if binary.stat().st_size < 1_000_000:
+        raise RuntimeError("cloudflared download failed or returned an empty file")
     return binary
 
 
