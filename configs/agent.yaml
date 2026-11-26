@@ -1,0 +1,25 @@
+# All values support ${ENV_VAR} and ${ENV_VAR:-default} expansion.
+model:
+  backend: "${RT_MODEL_BACKEND:-auto}"
+  base_url: "${RT_MODEL_BASE_URL:-http://127.0.0.1:8000/v1}"
+  api_key_env: RT_MODEL_API_KEY
+  model_name: "${RT_MODEL_NAME:-qwen2.5-3b-qlora}"
+  timeout_s: 60
+  max_retries: 3
+
+target:
+  base_url: "${RT_TARGET_URL:-http://127.0.0.1:7003}"
+  name: "LegacyBot (Damn Vulnerable AI Agent)"
+
+budgets:
+  max_recon_questions: 6
+  max_attacks_per_category: 8
+  max_total_attacks: 60
+  max_followups_per_finding: 2
+  switch_after_failures: 2
+
+run:
+  output_dir: reports
+  state_db: reports/state/assessment.db
+  seed: 1337
+  log_level: INFO

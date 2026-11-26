@@ -1,0 +1,42 @@
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+token.txt
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# Model artifacts and huge data
+*.safetensors
+*.bin
+*.gguf
+adapters/
+checkpoints/
+data/raw/
+
+# Runtime artifacts
+reports/state/
+reports/**/*.db
+eval/results/*.db
+*.log
+!reports/**/run.log
+.opencode/
+
+# Local transfer archive
+redteam-project.zip
+
+# Target is fetched separately via DVAA setup. See target/ARCHITECTURE.md.
+target/dvaa/
+
+# OS
+.DS_Store
+Thumbs.db

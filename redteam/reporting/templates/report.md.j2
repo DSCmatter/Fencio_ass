@@ -1,0 +1,73 @@
+# Security Assessment Report
+
+**Target:** {{ state.target.name }} ({{ state.target.base_url }})
+**Model backend:** {{ model_label }}
+**Started:** {{ state.started_at.isoformat() }}
+**Finished:** {{ state.finished_at.isoformat() if state.finished_at else 'in progress' }}
+**Attacks executed:** {{ state.tested | length }}
+
+## Executive Summary
+
+The assessment exercised an autonomous red team agent against an authorized local
+target. Reconnaissance identified {{ state.surface | length }} capability areas.
+The agent tested {{ categories_tested }} vulnerability classes and confirmed
+{{ state.findings | length }} findings. Counts by severity: critical {{ counts.critical }},
+high {{ counts.high }}, medium {{ counts.medium }}, low {{ counts.low }}.
+
+Methodology: benign reconnaissance mapped the attack surface. Seeded templates and
+the configured attacker model produced payloads for each class. Rule-based canary
+checks and model judgment classified responses. Every suspected finding was replayed
+with an independent confirmation attack before it was recorded as confirmed.
+
+## Findings
+
+{% for finding in state.findings %}
+### {{ loop.index }}. {{ finding.name }} ({{ finding.severity.value | upper }})
+
+- **Category:** {{ finding.category.value }}
+- **Confidence:** {{ '%.2f' | format(finding.confidence) }}
+- **Description:** {{ finding.description }}
+- **Methodology:** {{ finding.methodology }}
+- **Impact:** {{ finding.impact }}
+- **Remediation:** {{ finding.remediation }}
+
+**Reproduction**
+
+```
+{{ finding.reproduction }}
+```
+
+**Evidence**
+
+{% for item in evidence_by_finding.get(finding.id, []) %}
+Attack `{{ item.attack_id }}` — {{ item.note }}
+
+Request:
+```json
+{{ item.request | tojson(indent=2) }}
+```
+
+Response:
+```json
+{{ item.response | tojson(indent=2) }}
+```
+
+Canary hits: {{ item.canary_hits | join(', ') if item.canary_hits else 'none' }}
+
+{% endfor %}
+{% endfor %}
+
+## Appendix A: Rejected and suspicious attempts
+
+| Attack | Category | Tactic | Verdict | Reason |
+|---|---|---|---|---|
+{% for record in state.tested if record.verdict in ['rejected', 'suspicious'] %}
+| {{ record.id }} | {{ record.category.value }} | {{ record.tactic }} | {{ record.verdict.value }} | {{ record.evidence }} |
+{% endfor %}
+
+## Appendix B: Run metadata
+
+- **Budgets:** {{ state.budgets | tojson }}
+- **Planner decisions:** {{ state.planner_log | length }}
+- **Evidence items:** {{ state.evidence | length }}
+- **Scope:** local authorized target only. No public or production system was contacted.

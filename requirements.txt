@@ -1,0 +1,13 @@
+# Local runtime. Deliberately light: no torch, no transformers, no model loading.
+# Training and model serving run only on Colab/Kaggle (see training/requirements-colab.txt).
+pydantic>=2.7,<3
+pydantic-settings>=2.3,<3
+httpx>=0.27,<1
+fastapi>=0.111,<1
+uvicorn[standard]>=0.29,<1
+jinja2>=3.1,<4
+rich>=13.7,<14
+PyYAML>=6.0,<7
+pytest>=8.2,<9
+python-dotenv>=1.0,<2
+datasets>=2.19,<4

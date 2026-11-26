@@ -1,0 +1,24 @@
+# Used by training/train_qlora.py inside the Colab/Kaggle notebook only.
+base_model: Qwen2.5-3B-Instruct
+fallback_base_model: Qwen2.5-1.5B-Instruct
+load_in_4bit: true
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+epochs: 2
+learning_rate: 0.0002
+batch_size: 2
+gradient_accumulation_steps: 4
+max_seq_length: 2048
+warmup_ratio: 0.03
+weight_decay: 0.0
+seed: 1337
+checkpoint_steps: 50

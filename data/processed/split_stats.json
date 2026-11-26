@@ -1,0 +1,93 @@
+{
+  "seed": 20261126,
+  "checks": {
+    "unique_records": 4485,
+    "all_synthetic_tagged": true,
+    "json_output_schemas_valid": true,
+    "holdout_disjoint": true
+  },
+  "splits": {
+    "train": {
+      "total": 3589,
+      "by_task": {
+        "attack_generation": 2147,
+        "response_analysis": 929,
+        "strategy_planning": 513
+      },
+      "by_category": {
+        "data_exfiltration": 312,
+        "indirect_injection": 369,
+        "jailbreak": 528,
+        "memory_poisoning": 369,
+        "prompt_injection": 1089,
+        "system_prompt_extraction": 312,
+        "tool_abuse": 322,
+        "benign": 288
+      },
+      "by_seed_source": {
+        "handwritten": 2115,
+        "S-Labs/prompt-injection-dataset": 892,
+        "deepset/prompt-injections": 227,
+        "jackhhao/jailbreak-classification": 189,
+        "JailbreakBench/JBB-Behaviors": 166
+      }
+    },
+    "val": {
+      "total": 448,
+      "by_task": {
+        "attack_generation": 268,
+        "response_analysis": 117,
+        "strategy_planning": 63
+      },
+      "by_category": {
+        "data_exfiltration": 39,
+        "indirect_injection": 46,
+        "jailbreak": 66,
+        "memory_poisoning": 46,
+        "prompt_injection": 136,
+        "system_prompt_extraction": 39,
+        "tool_abuse": 40,
+        "benign": 36
+      },
+      "by_seed_source": {
+        "handwritten": 262,
+        "S-Labs/prompt-injection-dataset": 120,
+        "deepset/prompt-injections": 25,
+        "jackhhao/jailbreak-classification": 22,
+        "JailbreakBench/JBB-Behaviors": 19
+      }
+    },
+    "test": {
+      "total": 448,
+      "by_task": {
+        "attack_generation": 268,
+        "response_analysis": 117,
+        "strategy_planning": 63
+      },
+      "by_category": {
+        "data_exfiltration": 39,
+        "indirect_injection": 46,
+        "jailbreak": 66,
+        "memory_poisoning": 46,
+        "prompt_injection": 136,
+        "system_prompt_extraction": 39,
+        "tool_abuse": 40,
+        "benign": 36
+      },
+      "by_seed_source": {
+        "handwritten": 268,
+        "S-Labs/prompt-injection-dataset": 112,
+        "deepset/prompt-injections": 28,
+        "jackhhao/jailbreak-classification": 25,
+        "JailbreakBench/JBB-Behaviors": 15
+      }
+    }
+  },
+  "raw_seed_counts": {
+    "deepset/prompt-injections": 260,
+    "S-Labs/prompt-injection-dataset": 5739,
+    "jackhhao/jailbreak-classification": 666
+  },
+  "benign_seed_count": 7143,
+  "jbb_metadata_seed_count": 200
+}
