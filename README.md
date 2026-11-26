@@ -6,16 +6,9 @@ report.
 
 ## Safety
 
-Authorized targets only. This tool attacks a local DVAA instance you control.
+Authorized targets only. This tool attacks a local DVAA (Damn Vulnerable AI Agent) instance you control.
 Do not point it at public or production systems. No credentials or secrets are
 placed in model context. No model is loaded on this machine.
-
-## Status
-
-Phases 1 to 11 of `PLAN.md` are complete. GPU training ran on a free Colab T4.
-Base-versus-tuned evaluation is recorded. The tuned adapter served through a
-cloudflared tunnel and completed a real remote assessment. Hub push was skipped
-by user decision. Only the demo video remains, and that is manual.
 
 ## Layout
 
