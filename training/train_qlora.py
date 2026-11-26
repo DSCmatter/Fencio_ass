@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 from pathlib import Path
 
@@ -68,14 +69,22 @@ def main() -> None:
         optim="adamw_torch",
         fp16=True,
     )
-    trainer = SFTTrainer(
-        model=model,
-        tokenizer=tokenizer,
-        train_dataset=dataset,
-        dataset_text_field="text",
-        max_seq_length=config["max_seq_length"],
-        args=training_args,
-    )
+    trainer_kwargs = {
+        "model": model,
+        "train_dataset": dataset,
+        "dataset_text_field": "text",
+        "args": training_args,
+    }
+    signature = inspect.signature(SFTTrainer.__init__)
+    if "processing_class" in signature.parameters:
+        trainer_kwargs["processing_class"] = tokenizer
+    else:
+        trainer_kwargs["tokenizer"] = tokenizer
+    if "max_length" in signature.parameters:
+        trainer_kwargs["max_length"] = config["max_seq_length"]
+    elif "max_seq_length" in signature.parameters:
+        trainer_kwargs["max_seq_length"] = config["max_seq_length"]
+    trainer = SFTTrainer(**trainer_kwargs)
     trainer.train()
 
     adapter_dir = Path(args.output)

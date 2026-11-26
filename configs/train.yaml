@@ -1,6 +1,6 @@
 # Used by training/train_qlora.py inside the Colab/Kaggle notebook only.
-base_model: Qwen2.5-3B-Instruct
-fallback_base_model: Qwen2.5-1.5B-Instruct
+base_model: Qwen/Qwen2.5-3B-Instruct
+fallback_base_model: Qwen/Qwen2.5-1.5B-Instruct
 load_in_4bit: true
 lora_r: 16
 lora_alpha: 32
