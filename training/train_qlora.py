@@ -30,9 +30,9 @@ def main() -> None:
     parser.add_argument("--output", default="checkpoints/qlora-adapter")
     args = parser.parse_args()
 
+    from unsloth import FastLanguageModel
     from transformers import TrainingArguments
     from trl import SFTTrainer
-    from unsloth import FastLanguageModel
 
     config = load_yaml(args.config)
 
