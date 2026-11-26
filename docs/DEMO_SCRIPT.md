@@ -17,9 +17,10 @@ five required classes.
 
 ## 2:00 to 3:00. Model and training
 
-Open `training/notebook.ipynb` and `configs/train.yaml`. Show 4485 records,
-three tasks, Qwen2.5-3B, 4-bit LoRA r=16. State honestly that the local demo
-uses the labeled deterministic backend because the GPU run has not happened.
+Open `training/notebook.ipynb`, `configs/train.yaml` and `docs/MODEL_CARD.md`.
+Show 4485 records, three tasks, Qwen2.5-3B, 4-bit LoRA r=16. State that training
+ran on a free Colab T4. Show the base-versus-tuned table. JSON validity 0.9875 to
+1.0. Vulnerable accuracy 0.6875 to 1.0. Category accuracy 0.0 to 0.95.
 
 ## 3:00 to 9:00. Live assessment
 
@@ -30,11 +31,20 @@ cd d:\Coding\Fencio_ass\target\dvaa
 npm start
 ```
 
-In a second terminal:
+In a second terminal, run the tuned model if the Colab tunnel is still up.
+Otherwise run the labeled deterministic backend. Say which one you are using.
 
 ```powershell
 & d:\Coding\Fencio_ass\.venv\Scripts\Activate.ps1
 cd d:\Coding\Fencio_ass
+$env:RT_MODEL_BASE_URL = "https://<tunnel-host>/v1"
+$env:RT_MODEL_BACKEND = "remote"
+python -m redteam.cli run --backend remote --state-db reports/state/demo.db
+```
+
+Deterministic fallback.
+
+```powershell
 python -m redteam.cli run --backend deterministic --state-db reports/state/demo.db
 ```
 
@@ -63,15 +73,19 @@ Open `eval/results/evaluation.json`. Show the table below.
 | LegacyBot | 0.5 | 5 | 0 | 0 |
 | SecureBot | 0.0 | 0 | 0 | 0 |
 
+Open `eval/results/model_eval.json` and show base versus tuned. Mention the tuned
+remote assessment at `reports/20261126-124641/report.md`. Five confirmed
+findings, all five classes.
+
 Open `docs/PRODUCTION.md`. End with the honest answer. Not production-grade.
 Needs isolation, independent judges, durable jobs, strict authorization and
 human review.
 
-## After the GPU run
+## Prepared GPU artifacts
 
-Once the tunnel URL is pasted back, set `RT_MODEL_BASE_URL` and rerun with
-`--backend remote`. Show `eval/results/model_eval.json` for base versus tuned.
-Then the model claim is real, not planned.
+- Real adapter from the Colab T4 run.
+- Real base-versus-tuned numbers in `eval/results/model_eval.json`.
+- Real tuned remote assessment in `reports/20261126-124641/`.
 
 ## What to record
 

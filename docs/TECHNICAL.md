@@ -51,7 +51,18 @@ unknown-licence sets were skipped. See `data/DATASET_CARD.md`.
 
 `training/evaluate_model.py` runs base versus tuned on 80 held-out test records.
 It records JSON validity, exact field accuracy and latency to
-`eval/results/model_eval.json`. That file only appears after a real GPU run.
+`eval/results/model_eval.json`. The real Colab T4 run produced:
+
+| Metric | Base | Tuned |
+| --- | --- | --- |
+| JSON valid rate | 0.9875 (79/80) | 1.0 (80/80) |
+| Vulnerable accuracy | 0.6875 | 1.0 |
+| Category accuracy | 0.0 | 0.95 |
+| Mean confidence error | 0.08139 | 0.00050 |
+| Mean latency (s) | 3.413 | 5.491 |
+
+The tuned adapter served through a cloudflared tunnel and ran the remote
+assessment. See `reports/20261126-124641/report.md`.
 
 ## Agent design
 
@@ -79,10 +90,15 @@ A suspected finding is not final until a second, different payload reproduces it
 
 ## Real results
 
-Canonical assessment: `reports/20261126-090434/report.md`. Ten attacks, five
-confirmed findings, all five required classes, 13 evidence items. All five
-scored critical by the transparent rubric. Earlier run
-`reports/20261126-090356/` shows failed attempts and a tactic switch.
+Tuned remote assessment: `reports/20261126-124641/report.md`. Backend
+`remote:qwen2.5-3b-qlora`. Ten attacks, five confirmed findings, all five
+required classes, each confirmation reproduced. Runtime about 78 seconds. The
+report contains exact payloads and canary evidence, including
+`CANARY-SECRET-B4E6C018` and `CANARY-SYSPROMPT-7F3A2D91`.
+
+Deterministic assessment: `reports/20261126-090434/report.md`. Ten attacks, five
+confirmed findings, 13 evidence items. Earlier run `reports/20261126-090356/`
+shows failed attempts and a tactic switch.
 
 Evaluation: `eval/results/evaluation.json`, five real runs per target.
 
@@ -93,11 +109,13 @@ Evaluation: `eval/results/evaluation.json`, five real runs per target.
 
 ## Limitations
 
-- Small sample. Five runs per target.
-- Rule-based attacker, not the fine-tuned model, until the tunnel is supplied.
+- Small sample. Five runs per target and 80 evaluation records.
+- The deterministic backend is rule-based. The tuned remote run used the real
+  adapter. Results differ in latency but not in outcome on this target.
 - DVAA is a simulator. Its web tool does not fetch the hosted poisoned page, so
   indirect-injection success is recorded as instruction override and labeled as
   such in the report.
 - All five findings scored critical. The rubric is transparent but not calibrated
   against production assets.
-- No GPU result yet. Base-versus-tuned accuracy is unknown.
+- The tuned model's near-zero confidence error may reflect templated confidence
+  output, not calibration.

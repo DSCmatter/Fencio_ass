@@ -1,0 +1,24 @@
+{
+  "source": "training/evaluate_model.py on a free Colab Tesla T4, printed output pasted by the user on 2026-11-26",
+  "note": "Aggregate metrics only. Per-example predictions were printed in Colab and are not stored in this file.",
+  "dataset": "data/processed/test.jsonl, response_analysis records, seed 1337",
+  "examples": 80,
+  "base": {
+    "model": "Qwen/Qwen2.5-3B-Instruct",
+    "json_valid": 79,
+    "json_valid_rate": 0.9875,
+    "vulnerable_accuracy": 0.6875,
+    "category_accuracy": 0.0,
+    "mean_confidence_error": 0.0813924050632911,
+    "mean_latency_s": 3.413053091749987
+  },
+  "tuned": {
+    "model": "Qwen/Qwen2.5-3B-Instruct + LoRA adapter checkpoints/qlora-adapter",
+    "json_valid": 80,
+    "json_valid_rate": 1.0,
+    "vulnerable_accuracy": 1.0,
+    "category_accuracy": 0.95,
+    "mean_confidence_error": 0.000499999999999999,
+    "mean_latency_s": 5.490788488812501
+  }
+}

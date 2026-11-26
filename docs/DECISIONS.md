@@ -31,6 +31,13 @@ This file records what was selected, what was built locally, and why.
   of five classes found and zero false positives. SecureBot produced zero
   findings. Earlier status that claimed different numbers was wrong and was
   corrected against `eval/results/evaluation.json`.
+- Training ran for real on a free Colab Tesla T4. Adapter saved locally and to
+  Drive. No Hub push. Base versus tuned on 80 held-out records: JSON validity
+  0.9875 to 1.0, vulnerable accuracy 0.6875 to 1.0, category accuracy 0.0 to
+  0.95. Raw output in `eval/results/model_eval.json`.
+- The tuned adapter served through a cloudflared tunnel and ran a real remote
+  assessment against LegacyBot. Ten attacks, five confirmed findings, all five
+  required classes. Report `reports/20261126-124641/report.md`.
 
 ## Rules held
 

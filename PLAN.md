@@ -232,7 +232,7 @@ Report generated: reports/<timestamp>/report.md
 - [x] Eval metrics (ASR, FP, FN) from real runs
 - [x] `TECHNICAL.md`, `DECISIONS.md`, `PRODUCTION.md` complete
 - [x] Demo script ready
-- [ ] GPU training, base-vs-tuned eval and tuned remote assessment. Blocked on user Colab/Kaggle run.
+- [x] GPU training, base-vs-tuned eval and tuned remote assessment. Real Colab T4 run. Report `reports/20261126-124641/report.md`.
 - [ ] Demo video. Manual. User records.
 
 ## Failure Playbook

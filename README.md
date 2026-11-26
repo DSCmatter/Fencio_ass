@@ -12,9 +12,10 @@ placed in model context. No model is loaded on this machine.
 
 ## Status
 
-Phases 1 to 11 of `PLAN.md` are complete in code and verified locally. GPU
-training, tuned serving and the base-versus-tuned comparison require a free
-Colab or Kaggle run. Hub push was skipped by user decision.
+Phases 1 to 11 of `PLAN.md` are complete. GPU training ran on a free Colab T4.
+Base-versus-tuned evaluation is recorded. The tuned adapter served through a
+cloudflared tunnel and completed a real remote assessment. Hub push was skipped
+by user decision. Only the demo video remains, and that is manual.
 
 ## Layout
 
@@ -70,12 +71,14 @@ Results land in `eval/results/evaluation.json`. See `docs/TECHNICAL.md`.
 
 ## Training on a free GPU
 
-1. Publish this project or switch the notebook clone cell to a zip upload.
-2. Open `training/notebook.ipynb` in Colab or Kaggle.
-3. Runtime, change runtime type, T4 GPU, save.
-4. Run all cells. The notebook trains on the T4, saves the adapter to Drive and
+The repo is public at `https://github.com/DSCmatter/Fencio_ass`. The notebook
+clones it automatically.
+
+1. Open `training/notebook.ipynb` in Colab or Kaggle. On Kaggle choose T4 x2 and
+   enable Internet. On Colab choose a T4 GPU runtime.
+2. Run all cells. The notebook trains on the GPU, saves the adapter to Drive and
    evaluates base versus tuned into `eval/results/model_eval.json`.
-5. The last cell prints `TUNNEL_URL=<url>/v1`. Paste that into `configs/agent.yaml`
+3. The last cell prints `TUNNEL_URL=<url>/v1`. Paste that into `configs/agent.yaml`
    as `model.base_url`, or export `RT_MODEL_BASE_URL`.
 
 No HF token is needed. Qwen2.5-3B-Instruct is public.
@@ -83,7 +86,9 @@ No HF token is needed. Qwen2.5-3B-Instruct is public.
 Run the tuned assessment.
 
 ```powershell
-python -m redteam.cli run --backend remote
+$env:RT_MODEL_BASE_URL = "https://<tunnel-host>/v1"
+$env:RT_MODEL_BACKEND = "remote"
+python -m redteam.cli run --backend remote --state-db reports/state/assessment-tuned.db
 ```
 
 ## Free tier notes
