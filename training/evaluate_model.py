@@ -137,7 +137,7 @@ def main() -> None:
     parser.add_argument("--config", default="configs/train.yaml")
     parser.add_argument("--test-file", default="data/processed/test.jsonl")
     parser.add_argument("--adapter", default="checkpoints/qlora-adapter")
-    parser.add_argument("--out", default="eval/results/model_eval.json")
+    parser.add_argument("--out", "--output", dest="out", default="eval/results/model_eval.json")
     parser.add_argument("--limit", type=int, default=80)
     args = parser.parse_args()
 
