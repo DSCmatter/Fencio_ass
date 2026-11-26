@@ -5,16 +5,15 @@ Runs only inside the Colab/Kaggle GPU notebook. The local agent never loads a mo
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import subprocess
 import threading
+import urllib.request
 from pathlib import Path
 
 import yaml
 from fastapi import FastAPI
 from pydantic import BaseModel
-from unsloth import FastLanguageModel
 
 TUNNEL_URL = re.compile(r"https://[a-zA-Z0-9-]+\.trycloudflare\.com")
 
@@ -31,11 +30,31 @@ def download_cloudflared() -> Path:
     if binary.exists():
         return binary
     url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
-    import urllib.request
-
     urllib.request.urlretrieve(url, binary)
     binary.chmod(0o755)
     return binary
+
+
+def load_model(base_model: str, adapter: str, load_in_4bit: bool):
+    import torch
+    from peft import PeftModel
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+    tokenizer = AutoTokenizer.from_pretrained(base_model)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    kwargs: dict = {"device_map": {"": 0}, "dtype": torch.float16}
+    if load_in_4bit:
+        kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_use_double_quant=True,
+        )
+    model = AutoModelForCausalLM.from_pretrained(base_model, **kwargs)
+    model = PeftModel.from_pretrained(model, adapter)
+    model.eval()
+    return model, tokenizer
 
 
 def main() -> None:
@@ -46,30 +65,34 @@ def main() -> None:
     args = parser.parse_args()
     config = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
 
-    model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name=config["base_model"],
-        max_seq_length=config["max_seq_length"],
-        dtype=None,
-        load_in_4bit=True,
+    model, tokenizer = load_model(
+        config["base_model"], args.adapter, bool(config.get("load_in_4bit", True))
     )
-    if hasattr(model, "load_adapter"):
-        model.load_adapter(args.adapter)
-    FastLanguageModel.for_inference(model)
+    device = next(model.parameters()).device
 
     app = FastAPI()
 
+    @app.get("/health")
+    def health() -> dict:
+        return {"status": "ok", "model": config["base_model"]}
+
     @app.post("/v1/chat/completions")
     def chat_completion(request: CompletionRequest) -> dict:
+        import torch
+
         prompt = tokenizer.apply_chat_template(
             request.messages, tokenize=False, add_generation_prompt=True
         )
-        inputs = tokenizer([prompt], return_tensors="pt").to(model.device)
-        outputs = model.generate(
-            **inputs,
-            max_new_tokens=request.max_tokens,
-            temperature=request.temperature,
-            do_sample=True,
-        )
+        inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=2048).to(device)
+        greedy = request.temperature <= 0
+        with torch.inference_mode():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=request.max_tokens,
+                do_sample=not greedy,
+                temperature=None if greedy else request.temperature,
+                pad_token_id=tokenizer.eos_token_id,
+            )
         text = tokenizer.decode(outputs[0][inputs["input_ids"].shape[1] :], skip_special_tokens=True)
         return {
             "choices": [{"message": {"role": "assistant", "content": text}}],
