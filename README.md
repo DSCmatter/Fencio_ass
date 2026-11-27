@@ -1,8 +1,9 @@
 # AI Agent Red Teaming System
 
-An autonomous red team agent that attacks an intentionally vulnerable local AI
-agent, adapts its strategy, records evidence and emits a structured security
-report.
+An autonomous red team agent that attacks
+[DVAA](https://github.com/opena2a-org/damn-vulnerable-ai-agent) (Damn Vulnerable
+AI Agent), an intentionally vulnerable agent running on this machine. It adapts
+its strategy, records evidence and emits a structured security report.
 
 ## Safety
 
@@ -15,7 +16,7 @@ placed in model context. No model is loaded on this machine.
 - `configs/` - agent and training configuration
 - `data/` - dataset preparation and dataset card with licences
 - `training/` - dataset prep, QLoRA training, evaluate, notebook, tunnel server
-- `target/` - DVAA clone and its architecture document
+- `target/` - DVAA clone and its [architecture document](target/ARCHITECTURE.md)
 - `redteam/` - agent loop, state, planner, attacker, analyzer, verifier, reports
 - `eval/` - ground truth, evaluation harness and real results
 - `reports/` - generated assessments and SQLite state
@@ -33,15 +34,23 @@ python -m redteam.cli --version
 python -m redteam.cli --help
 ```
 
-Start the vulnerable target from a second terminal.
+The target is [DVAA](https://github.com/opena2a-org/damn-vulnerable-ai-agent)
+(Apache-2.0, v0.9.3). It is not committed to this repo, so clone it once and
+start it from a second terminal.
 
 ```powershell
-cd d:\Coding\Fencio_ass\target\dvaa
+git clone --depth 1 https://github.com/opena2a-org/damn-vulnerable-ai-agent target/dvaa
+cd target/dvaa
+npm ci
 npm start
 ```
 
 LegacyBot listens on `http://127.0.0.1:7003`. SecureBot, the negative control,
 listens on `http://127.0.0.1:7001`. Dashboard on `:9000`.
+
+Canary-based proof of leakage depends on three marker strings patched into the
+clone. See [target/ARCHITECTURE.md](target/ARCHITECTURE.md) under *Local
+modifications* before running the deterministic backend.
 
 Run an assessment with the labeled offline backend.
 
