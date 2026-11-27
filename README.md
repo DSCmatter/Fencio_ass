@@ -92,9 +92,9 @@ public and ungated with accepted licences.
 
 ## Documentation
 
-- `docs/TECHNICAL.md` - architecture, data, agent design, real results
-- `docs/PRODUCTION.md` - answer to the production-grade question
-- `docs/DECISIONS.md` - choices and environment deviations
-- `docs/MODEL_CARD.md` - model, data, hyperparameters, limitations
-- `target/ARCHITECTURE.md` - target surface and canaries
-- `data/DATASET_CARD.md` - licences and dataset structure
+- [`docs/TECHNICAL.md`](docs/TECHNICAL.md) - architecture, data, agent design, real results
+- [`docs/PRODUCTION.md`](docs/PRODUCTION.md) - answer to the production-grade question
+- [`docs/DECISIONS.md`](docs/DECISIONS.md) - choices and environment deviations
+- [`docs/MODEL_CARD.md`](docs/MODEL_CARD.md) - model, data, hyperparameters, limitations
+- [`target/ARCHITECTURE.md`](target/ARCHITECTURE.md) - target surface and canaries
+- [`data/DATASET_CARD.md`](data/DATASET_CARD.md) - licences and dataset structure
