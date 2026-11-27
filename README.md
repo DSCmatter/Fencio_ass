@@ -19,7 +19,7 @@ placed in model context. No model is loaded on this machine.
 - `redteam/` - agent loop, state, planner, attacker, analyzer, verifier, reports
 - `eval/` - ground truth, evaluation harness and real results
 - `reports/` - generated assessments and SQLite state
-- `docs/` - technical notes, decisions, production design, model card, demo
+- `docs/` - technical notes, decisions, production design, model card
 
 ## Local quickstart
 
