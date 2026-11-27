@@ -96,6 +96,5 @@ public and ungated with accepted licences.
 - `docs/PRODUCTION.md` - answer to the production-grade question
 - `docs/DECISIONS.md` - choices and environment deviations
 - `docs/MODEL_CARD.md` - model, data, hyperparameters, limitations
-- `docs/DEMO_SCRIPT.md` - 12 minute recording script
 - `target/ARCHITECTURE.md` - target surface and canaries
 - `data/DATASET_CARD.md` - licences and dataset structure

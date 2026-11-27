@@ -40,3 +40,6 @@ target/dvaa/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local-only demo script, not published
+docs/DEMO_SCRIPT.md
